@@ -27,6 +27,8 @@ public class CartServlet extends HttpServlet{
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response){
+        
+        // getting but not starting a session
         HttpSession session = request.getSession(false);
 
         if(session == null){
@@ -48,8 +50,10 @@ public class CartServlet extends HttpServlet{
         }
         return;    
     }            
-            Map<CartItem, Integer> userCart = cartManager.getUserCart(requestEmail);
+        // getting the user's cart based on his email    
+        Map<CartItem, Integer> userCart = cartManager.getUserCart(requestEmail);
  
+            // checking if user's cart is empty or not
             try{
                 PrintWriter out = response.getWriter();
                 if(userCart == null || userCart.isEmpty()){
@@ -69,8 +73,9 @@ public class CartServlet extends HttpServlet{
         }
     }         
 
-
     public void doPost(HttpServletRequest request, HttpServletResponse response){
+        
+         // getting but not starting a session
         HttpSession session = request.getSession(false);
 
         if(session == null){
@@ -80,6 +85,7 @@ public class CartServlet extends HttpServlet{
             } catch (IOException e) {
                     e.printStackTrace();
             }
+            return;
         }
 
         String sessionEmail = (String) session.getAttribute("email");
@@ -94,10 +100,12 @@ public class CartServlet extends HttpServlet{
             return;
         }
 
+        // retrieving vital information for creating a new cartItem from the request
         String imgAddress = request.getParameter("imgAddress");
         String itemName = request.getParameter("itemName");
         int itemPrice = Integer.parseInt(request.getParameter("itemPrice"));
 
+        // creating a new cartItem with the retrieved information from request and asigning it to the user's email/cart
         CartItem cartItem = new CartItem(imgAddress, itemName, itemPrice);
         cartManager.addToCart(sessionEmail, cartItem);
 

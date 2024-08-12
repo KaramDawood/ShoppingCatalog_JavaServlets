@@ -84,11 +84,13 @@ public class AccessServlet extends HttpServlet{
         String requestLastName = request.getParameter("lastName");
         String requestPassword = request.getParameter("password");
 
+        // for testing/logging purposes
         System.out.println("Received email: " + requestEmail);
         System.out.println("Received first name: " + requestFirstName);
         System.out.println("Received last name: " + requestLastName);
         System.out.println("Received password: " + requestPassword);
 
+        // get but not create the user's session
         HttpSession session = request.getSession(false);
 
         if(session != null){
@@ -99,9 +101,12 @@ public class AccessServlet extends HttpServlet{
 
         try
         {
+        //creating the user that's to be registered
         User registeringUser = new User(requestEmail, requestPassword, requestFirstName, requestLastName);
 
         this.userManager.registerUser(registeringUser);
+        
+        // for testing/loggin purposes
         this.userManager.printUsers();
         
         response.sendRedirect("/catalog/login.html");
@@ -111,14 +116,25 @@ public class AccessServlet extends HttpServlet{
     }
 
     public void logOutAction(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
+         
+        // get but not create the user's session
         HttpSession session = request.getSession(false);
 
         if(session == null){
-            response.sendRedirect("/catalog/login.html");
+            try {
+                response.sendRedirect("/catalog/login.html");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }else{
             session.invalidate();
-            response.sendRedirect("/catalog/login.html");
+            
+            try {
+                response.sendRedirect("/catalog/login.html");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             return;
         }
     }
@@ -132,6 +148,7 @@ public class AccessServlet extends HttpServlet{
             return;
         }
 
+        // checking what action the user is trying to do
         switch(action){
             case "login":
             loginAction(request, response);

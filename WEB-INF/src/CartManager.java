@@ -24,31 +24,31 @@ public class CartManager{
         return null; 
     }
 
-public void addToCart(String email, CartItem item){
-    if (email != null && item != null) {
-        // Make sure user already has an active cart
-        Map<CartItem, Integer> cart = userCarts.get(email);
+    public void addToCart(String email, CartItem item){
+        if (email != null && item != null) {
+            // Make sure user already has an active cart
+            Map<CartItem, Integer> cart = userCarts.get(email);
 
-        // if he hasn't create a new one
-        if (cart == null) {
-            cart = new HashMap<>();
-            userCarts.put(email, cart);
-        }
+            // if he hasn't create a new one
+            if (cart == null) {
+                cart = new HashMap<>();
+                userCarts.put(email, cart);
+            }
 
-        // Check if item is already in cart
-        Integer quantity = cart.get(item);
+            // Check if item is already in cart
+            Integer quantity = cart.get(item);
 
-        if (quantity == null) {
-            // if item is not in cart, add it to one with the quantity of one
-            cart.put(item, 1);
+            if (quantity == null) {
+                // if item is not in cart, add it to one with the quantity of one
+                cart.put(item, 1);
+            } else {
+                // if the item is already in the cart, increase the amount by one
+                cart.put(item, quantity + 1);
+            }
         } else {
-            // if the item is already in the cart, increase the amount by one
-            cart.put(item, quantity + 1);
+            throw new IllegalArgumentException("Email and/or item are not correct");
         }
-    } else {
-        throw new IllegalArgumentException("Email and/or item are not correct");
-    }
-    }
+        }
 
     //Testing
     /* 
